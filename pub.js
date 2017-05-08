@@ -215,7 +215,7 @@ var publish = function () {
 		var date = start.time.split('_')[0];
 		var envStr = args.env ? `env=${args.env}` : '';
 		var params = `port=${pub.port} ${envStr} dir=${pub.dir} time=${start.time} puber=${start.puber}`;
-		var deployCmdExp = `nohup nobox deploy ${params} > ${pub.dir}/logs/${date}.log 2>&1 &`;
+		var deployCmdExp = `nohup deploy ${params} > ${pub.dir}/logs/${date}.log 2>&1 &`;
 		if (args.parallel) {
 			cmdExp = deployCmdExp;
 		} else {
@@ -224,7 +224,7 @@ var publish = function () {
 	} else if (next.rose) {
 		log(`${way} logining...`);
 		var {local,remote} = getParams();
-		cmdExp.push(`'nobox pub ${args.env} ${isShow} ${local} ${remote}'`);
+		cmdExp.push(`'pub ${args.env} ${isShow} ${local} ${remote}'`);
 	}
 
 	cmd(cmdExp, start.dir, publishFinish);
