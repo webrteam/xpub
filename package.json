@@ -1,6 +1,6 @@
 {
   "name": "express-puber",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "bin": {
     "pub": "./pub.js",
     "deploy": "./deploy.js"
