@@ -10,15 +10,12 @@ var ex = require('./ex');
 var {getArgs, cmd} = require('ifun');
 
 var doDeploy = function (ua) {
-	var args = getArgs('cmd');
-	args.node = args.node || args.env;
-	args.java = args.java || args.env;
-	var env = args.env || 'test';
-
+	var args = getArgs();
 	var dir = `${args.dir}/web`;
 
 	//step1 - stop node
-	var pid = ex.getPid(['deploy', args.port]);
+	var pid = ex.getPid(['node', args.port]);
+	console.log({pid});
 	pid && ex.kill(pid);
 
 	//step2 - delete old files
@@ -30,12 +27,10 @@ var doDeploy = function (ua) {
 
 	//step4 - run node
 	cmd('cp web/package.json package.json', args.dir);
-	cmd('npm run taobao', args.dir);
+	cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', args.dir);
 	var logFile = `${args.dir}/logs/1.log`;
-	args.cmd = 'start';
-	args.dir = dir;
-	//start(ua, args);
-	cmd(`nohup npm start node=local env=${env} port=8000 > ${logFile} 2>&1 &`, dir);
+	cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} > ${logFile} 2>&1 &`, dir);
+	//cmd(`npm start node=local env=${env} port=8000`, dir);
 
 };
 

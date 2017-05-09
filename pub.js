@@ -158,10 +158,10 @@ var getSshKey = function (key, dir) {
 			if (/[40]{3}$/.test(mode)) {
 				return `-i ${key}`;
 			} else {
-				end('the key file must locked, please use the [chmod] command to change mode!');
+				throw 'the key file must locked, please use the [chmod] command to change mode!';
 			}
 		} else {
-			end(`the key path '${key}' is no exist!`);
+			throw `the key path '${key}' is no exist!`;
 		}
 	}
 	return '';
@@ -215,9 +215,10 @@ var publish = function () {
 	if (next.rose == 'deploy') {
 		log(`${way} publishing...`);
 		var date = start.time.split('_')[0];
-		var envStr = args.env ? `env=${args.env}` : '';
+		var envStr = args.env ? `node=${args.env} env=${args.env}` : '';
 		var params = `port=${pub.port} ${envStr} dir=${pub.dir} time=${start.time} puber=${start.puber}`;
-		var deployCmdExp = `nohup deploy ${params} > ${pub.dir}/logs/${date}.log 2>&1 &`;
+		//var deployCmdExp = `nohup deploy ${params} > ${pub.dir}/logs/${date}.log 2>&1 &`;
+		var deployCmdExp = `deploy ${params}`;
 		if (args.parallel) {
 			cmdExp = deployCmdExp;
 		} else {
@@ -281,7 +282,7 @@ var parseLine = function () {
 
 var iniPub = function (_ua) {
 	ua = _ua;
-	args = getArgs('cmd', 'env');
+	args = getArgs('env');
 	isShow = args.show ? '--show' : '';
 
 	cmdList = [];
