@@ -14,9 +14,9 @@ var doDeploy = function (ua) {
 	var dir = `${args.dir}/web`;
 
 	//step1 - stop node
-	var pid = ex.getPid(['node', args.port]);
-	console.log({pid});
-	pid && ex.kill(pid);
+	var pids = ex.getPid(['node', args.port]);
+	console.log({pids});
+	pids.forEach(pid => ex.kill(pid));
 
 	//step2 - delete old files
 	fs.existsSync(dir) && fs2.rmdir(dir);
@@ -28,8 +28,9 @@ var doDeploy = function (ua) {
 	//step4 - run node
 	cmd('cp web/package.json package.json', args.dir);
 	cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', args.dir);
-	var logFile = `${args.dir}/logs/1.log`;
-	cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} > ${logFile} 2>&1 &`, dir);
+	var date = args.time.split('_')[0];
+	var logFile = `${args.dir}/logs/${date}.log`;
+	cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} time=${args.time} puber=${args.puber} > ${logFile} 2>&1 &`, dir);
 	//cmd(`npm start node=local env=${env} port=8000`, dir);
 
 };

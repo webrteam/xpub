@@ -5,24 +5,16 @@ var {cmd,getCmd} = require('ifun');
 //如找不到pid返回0
 exports.getPid = function(keywords){
 	var ps = process.platform=='linux' ? 'ps -aux' : 'ps aux';
-	var stdout = getCmd(ps);
-	var plist = stdout.split('\n');
-	var pid = 0;
-	plist.some(function(line){
-		var isMatch = keywords.every(function(keyword){
-			return line.includes(keyword);
-		});
-		if(isMatch) {
+	//ps = [ps].concat(keywords.map(x=>`grep ${x}`)).join(' | ');
+	var pids = [];
+	getCmd(ps).split('\n').forEach(line => {
+		if (keywords.every(x=>line.includes(x))) {
+			console.log({line});
 			var _pid = line.trim().split(/\s+/)[1];
-			if(_pid == process.pid){
-				isMatch = false;
-			}else{
-				pid = _pid;
-			}
+			_pid != process.pid && pids.push(_pid);
 		}
-		return isMatch;
 	});
-	return pid;
+	return pids;
 };
 
 //杀进程
