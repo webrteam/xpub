@@ -1,6 +1,6 @@
 {
   "name": "express-puber",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "bin": {
     "pub": "./pub.js",
     "epub": "./pub.js",

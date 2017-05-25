@@ -25,14 +25,18 @@ var doDeploy = function (ua) {
 	fs.mkdirSync(dir);
 	ex.unTar(`${args.dir}/bin.tar.gz`, dir);
 
-	//step4 - run node
-	cmd('cp web/package.json package.json', args.dir);
-	cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', args.dir);
-	var date = args.time.split('_')[0];
-	var logFile = `${args.dir}/logs/${date}.log`;
-	cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} time=${args.time} puber=${args.puber} > ${logFile} 2>&1 &`, dir);
-	//cmd(`npm start node=local env=${env} port=8000`, dir);
+	//step4 - install dependence
+	if (fs.existsSync(`${dir}/package.json`)) {
+		cmd('cp web/package.json package.json', args.dir);
+		cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', args.dir);
+	}
 
+	//step5 - run node
+	if (fs.existsSync(`${dir}/server.js`)) {
+		var date = args.time.split('_')[0];
+		var logFile = `${args.dir}/logs/${date}.log`;
+		cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} time=${args.time} puber=${args.puber} > ${logFile} 2>&1 &`, dir);
+	}
 };
 
 doDeploy();
