@@ -177,7 +177,7 @@ var publishBegin = function () {
 	way = `${start.env}->${next.env}:`;
 	args.show && log({pubIndex, pubCount});
 	if (pubCount > 1) {
-		log(`\n===================================\n`);
+		log('\n===================================\n');
 		log(`now is publishing the ${getTh(pubIndex + 1)} machine:`);
 	}
 	log({start, next})
@@ -214,11 +214,16 @@ var publish = function () {
 
 	if (next.rose == 'deploy') {
 		log(`${way} publishing...`);
-		var date = start.time.split('_')[0];
-		var envStr = args.env ? `node=${args.env} env=${args.env}` : '';
-		var params = `port=${pub.port} ${envStr} dir=${pub.dir} time=${start.time} puber=${start.puber}`;
-		//var deployCmdExp = `nohup deploy ${params} > ${pub.dir}/logs/${date}.log 2>&1 &`;
-		var deployCmdExp = `deploy ${params}`;
+		//var date = start.time.split('_')[0];
+		var params = ['deploy'];
+		var nodeEnv =  args.node || args.env;
+		args.port && params.push(`port=${args.port}`);
+		nodeEnv && params.push(`node=${nodeEnv}`);
+		args.env && params.push(`env=${args.env}`);
+		pub.dir && params.push(`dir=${pub.dir}`);
+		start.time && params.push(`time=${start.time}`);
+		start.puber && params.push(`puber=${start.puber}`);
+		var deployCmdExp = params.join(' ');
 		if (args.parallel) {
 			cmdExp = deployCmdExp;
 		} else {
@@ -286,8 +291,11 @@ var iniPub = function (_ua) {
 	isShow = args.show ? '--show' : '';
 
 	cmdList = [];
-	log({ua, args})
-	pub = require(`${args.dir || ua.path}/config/pub.js`);
+	log({ua, args});
+	var configFile = `${args.dir || ua.path}/config/pub.js`;
+	if (fs.existsSync(configFile)) {
+		pub = require(configFile);
+	}
 	if (typeof pub === 'function') {
 		pub = pub(args, ua);
 	}
@@ -295,7 +303,7 @@ var iniPub = function (_ua) {
 	if (!pub) {
 		throw 'please setting publish option [pub] before!';
 	}
-	if (config.pub && args.pub) {
+	if (args.pub) {
 		for (var k in args.pub) {
 			pub[k] = args.pub[k];
 		}
@@ -309,7 +317,7 @@ var iniPub = function (_ua) {
 
 	if (!args.parallel) {
 		if (!pub.host) {
-			throw 'please setting option [pub.ip] or [pub.domain] before!';
+			throw 'please setting option [pub.host] before!';
 		}
 	}
 	args.show && log({config});
