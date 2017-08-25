@@ -1,9 +1,9 @@
 {
-  "name": "express-puber",
-  "version": "1.2.3",
+  "name": "xpub",
+  "version": "1.0.1",
   "bin": {
+    "xpub": "./pub.js",
     "pub": "./pub.js",
-    "epub": "./pub.js",
     "deploy": "./deploy.js"
   },
   "author": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:likaituan/express-puber.git"
+    "url": "git@github.com:webrteam/xpub.git"
   },
   "license": "MIT",
   "description": "express-puber is a publish tool",
