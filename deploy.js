@@ -14,7 +14,7 @@ var doDeploy = function (ua) {
 	var dir = `${args.dir}/web`;
 
 	//step1 - stop node
-	var pids = ex.getPid(['node', args.port]);
+	var pids = ex.getPid(['node', `port=${args.port}`]);
 	console.log({pids});
 	pids.forEach(pid => ex.kill(pid));
 
@@ -27,15 +27,14 @@ var doDeploy = function (ua) {
 
 	//step4 - install dependence
 	if (fs.existsSync(`${dir}/package.json`)) {
-		cmd('cp web/package.json package.json', args.dir);
-		cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', args.dir);
+		cmd(args.env === 'dev' ? 'npm run taobao' : 'npm install', dir);
 	}
 
 	//step5 - run node
 	if (fs.existsSync(`${dir}/server.js`)) {
 		var date = args.time.split('_')[0];
 		var logFile = `${args.dir}/logs/${date}.log`;
-		cmd(`nohup npm start node=${args.node} env=${args.env} port=${args.port} time=${args.time} puber=${args.puber} > ${logFile} 2>&1 &`, dir);
+		cmd(`nohup node server env=${args.env} dir=${args.dir} time=${args.time} puber=${args.puber} port=${args.port} > ${logFile} 2>&1 &`, dir);
 	}
 };
 

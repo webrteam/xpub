@@ -1,7 +1,7 @@
 ## 欢迎使用express发版机
 
 ### 常用命令
-* pub 发版
+* pub/xpub 发版
 * deploy 部署
 
 ### 发版简单配置

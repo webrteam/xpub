@@ -1,6 +1,6 @@
 {
   "name": "xpub",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "bin": {
     "xpub": "./pub.js",
     "pub": "./pub.js",
@@ -23,6 +23,6 @@
     "deploy"
   ],
   "dependencies": {
-    "ifun": "0.2.6"
+    "ifun": "^0.2.6"
   }
 }
